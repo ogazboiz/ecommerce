@@ -1,6 +1,7 @@
-const userSignInController = require("./userSignUp");
-
-async function userSignIn(req,res){
+const userModel = require("../models/userModel");
+var bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+async function userSignInController(req,res){
     try{
 
         const {email, password} = req.body
@@ -8,7 +9,7 @@ async function userSignIn(req,res){
         if(!email){
             throw new Error("Please provide email")
         }
-        if(!Password){
+        if(!password){
             throw new Error("Please provide password")
         }
 
@@ -17,6 +18,35 @@ async function userSignIn(req,res){
         if(!user){
             throw new Error("user not found")
         }
+
+        const checkpassword = await bcrypt.compare(password, user.password)
+
+
+        console.log("checkpassword", checkpassword)
+
+        if(checkpassword){
+            const tokenData = {
+                _id : user._id,
+                email : user.email,
+
+            }
+            const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, { expiresIn: 60 * 60 * 8});
+              const tokenOption = {
+                httpOnly : true,
+                secure : true
+              }
+            res.cookie("token", token, tokenOption).status(200).json({
+                message : "Login Succesfully",
+                data : token,
+                success : true,
+                error : false
+            })
+            
+        } else{
+            throw new Error("Please check password")
+        }
+
+
     }catch(err){
         res.json({
             message: err.message || err  ,
@@ -27,4 +57,4 @@ async function userSignIn(req,res){
 
 }
 
-module.exports = userSignINController
+module.exports = userSignInController

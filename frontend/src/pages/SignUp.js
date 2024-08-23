@@ -13,7 +13,7 @@ function SignUp() {
     password: "",
     confirmPassword: "",
     name: "",
-    profilePics: "",
+    profilePic: "",
   });
 
   const navigate = useNavigate()
@@ -37,11 +37,11 @@ function SignUp() {
     setData((preve) => {
       return {
         ...preve,
-        profilePics: imagePic,
+        profilePic: imagePic,
       };
     });
 
-    // console.log("imagePic", imagePic)
+    console.log("imagePic", imagePic)
     // console.log("file", file)
   };
 
@@ -79,7 +79,7 @@ function SignUp() {
         <div className="bg-white p-5 w-full max-w-sm mx-auto">
           <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
             <div>
-              <img src={data.profilePics || loginIcons} alt="login icons" />
+              <img src={data.profilePic || loginIcons} alt="login icons" />
             </div>
             <form>
               <label>

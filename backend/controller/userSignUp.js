@@ -3,7 +3,7 @@ var bcrypt = require("bcryptjs");
 
 async function userSignUpController(req, res) {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, profilePic } = req.body;
 
     const user = await userModel.findOne({email})
     if(user){
@@ -30,13 +30,13 @@ async function userSignUpController(req, res) {
 
     const payload = {
         ...req.body,
-        role : "General",
+        role : "GENERAL",
         password : hashPassword
     }
     const userData = new userModel(payload);
     const saveUser = await userData.save();
 
-    res.status(201).json({
+    res.status(200).json({
         data: saveUser,
         success : true,
         error : false,
